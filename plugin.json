@@ -2,31 +2,72 @@
   "$schema": "https://locaryn.dev/schema/plugin.json/v0.1",
   "apiVersion": "0.1",
   "name": "plugin-vision-ocr",
-  "version": "1.0.0",
-  "description": "Vision, OCR and object detection extension (Florence-2, GOT-OCR2, YOLO, Qwen2-VL).",
+  "version": "1.1.0",
+  "description": "Vision par ordinateur, OCR haute fidélité (Florence-2, GOT-OCR2) et détection d'objets (YOLO).",
   "author": "Locaryn Team",
   "license": "Apache-2.0",
   "homepage": "https://github.com/Locaryn/plugin-vision-ocr",
   "repository": "https://github.com/Locaryn/plugin-vision-ocr",
-  "keywords": ["vision", "ocr", "object-detection", "segmentation"],
+  "keywords": [
+    "vision",
+    "ocr",
+    "object-detection",
+    "segmentation",
+    "florence2",
+    "yolo"
+  ],
   "permissions": {
-    "files_read": true,
-    "files_write": true
+    "mcp": {
+      "reason": "Lancer le moteur de vision et détection locale."
+    },
+    "files.read": {
+      "reason": "Lire les images et documents scannés."
+    },
+    "files.write": {
+      "reason": "Écrire les fichiers de transcription et visualisations."
+    },
+    "network": {
+      "reason": "Télécharger les modèles de vision depuis HuggingFace."
+    }
   },
-  "capabilities": ["vision-ocr"],
+  "components": {
+    "skills": [
+      "SKILL.md"
+    ],
+    "mcp": "mcp/mcp.json"
+  },
+  "capabilities": [
+    "vision-ocr"
+  ],
   "ui_contributions": {
+    "slots": [
+      {
+        "id": "vision-ocr-catalog",
+        "slot": "marketplace.catalogs",
+        "order": 12,
+        "type": "data",
+        "label": "Modèles de vision et OCR",
+        "icon": "target",
+        "entry": "dist/marketplace.json",
+        "hint": "Ajoute les modèles Florence-2 et YOLO au catalogue"
+      },
+      {
+        "id": "vision-ocr-studio",
+        "slot": "studio.tabs",
+        "order": 12,
+        "label": "Vision & OCR",
+        "icon": "target",
+        "type": "custom-element",
+        "entry": "dist/ui.js",
+        "tag": "locaryn-vision-ocr-panel",
+        "hint": "Extraction de texte et détection d'objets"
+      }
+    ],
     "nav_items": [
       {
         "id": "studio",
         "label": "Studio de génération",
         "icon": "image"
-      }
-    ],
-    "studio_tabs": [
-      {
-        "id": "object-detection",
-        "label": "Détection & OCR",
-        "icon": "target"
       }
     ]
   }

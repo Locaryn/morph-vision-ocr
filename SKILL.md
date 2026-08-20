@@ -1,8 +1,8 @@
 ---
 name: vision-ocr
-description: Extract text from images, scanned documents, and detect objects with bounding boxes.
+description: Extraction de texte OCR depuis des images et détection d'objets par boîtes englobantes.
 ---
 
-# Vision & OCR Skill
+# Compétence Vision & OCR
 
-Use `ocr_extract_text` when the user asks to read text from an image, screenshot, or scan.
+Utilisez `ocr_extract_text` pour lire des captures ou scans, et `detect_objects` pour identifier des éléments visuels.

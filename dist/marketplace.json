@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "refreshUrl": "https://raw.githubusercontent.com/Locaryn/plugin-vision-ocr/main/dist/marketplace.json",
+  "owns": [
+    "florence-2",
+    "got-ocr2",
+    "yolo"
+  ],
+  "categories": [
+    {
+      "id": "vision-ocr",
+      "label": "Vision & OCR",
+      "icon": "target",
+      "matches": [
+        "vision-ocr"
+      ],
+      "requires": [
+        "vision-ocr"
+      ]
+    }
+  ],
+  "models": [
+    {
+      "id": "florence-2-large",
+      "name": "Florence-2 Large",
+      "brand": "Microsoft",
+      "description": "Modèle multimodal puissant pour OCR dense, détection et segmentation.",
+      "license": "MIT",
+      "releaseDate": "2024-06-20",
+      "releaseYear": 2024,
+      "capabilities": [
+        "vision-ocr"
+      ],
+      "variants": [
+        {
+          "size": "ONNX · 0.7B",
+          "params": 0.7,
+          "storageGb": 1.5,
+          "quants": [
+            "fp16"
+          ],
+          "tag": "https://huggingface.co/microsoft/Florence-2-large/resolve/main/model.onnx",
+          "downloads": []
+        }
+      ]
+    }
+  ]
+}
