@@ -1,13 +1,13 @@
 {
   "$schema": "https://locaryn.dev/schema/plugin.json/v0.1",
   "apiVersion": "0.1",
-  "name": "plugin-vision-ocr",
+  "name": "extension-vision-ocr",
   "version": "1.1.0",
   "description": "Vision par ordinateur, OCR haute fidélité (Florence-2, GOT-OCR2) et détection d'objets (YOLO).",
   "author": "Locaryn Team",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/Locaryn/plugin-vision-ocr",
-  "repository": "https://github.com/Locaryn/plugin-vision-ocr",
+  "homepage": "https://github.com/Locaryn/extension-vision-ocr",
+  "repository": "https://github.com/Locaryn/extension-vision-ocr",
   "keywords": [
     "vision",
     "ocr",
