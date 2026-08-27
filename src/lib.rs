@@ -72,31 +72,16 @@ pub fn list_vision_models() -> Vec<String> {
     models
 }
 
-pub async fn ocr_extract_text(req: OcrRequest) -> Result<OcrResult, String> {
-    Ok(OcrResult {
-        extracted_text: format!(
-            "Texte extrait de {}: [Analyse OCR effectuée]",
-            req.image_path
-        ),
-        confidence: 0.96,
-    })
+/// Non implemente. La signature est conservee pour que l'interface et le
+/// serveur MCP gardent leur forme, mais l'appel echoue franchement plutot
+/// que de fabriquer un resultat.
+pub async fn ocr_extract_text(_req: OcrRequest) -> Result<OcrResult, String> {
+    Err("L'OCR n'est pas implemente : ce morph ne lit aucune image.".into())
 }
 
-/// ATTENTION : implémentation factice. La requête est ignorée et le résultat
-/// est une valeur fixe. Aucune détection n'a lieu.
+/// Non implemente. La signature est conservee pour que l'interface et le
+/// serveur MCP gardent leur forme, mais l'appel echoue franchement plutot
+/// que de fabriquer un resultat.
 pub async fn detect_objects(_req: DetectObjectsRequest) -> Result<DetectObjectsResult, String> {
-    Ok(DetectObjectsResult {
-        objects: vec![
-            DetectedObject {
-                label: "person".into(),
-                confidence: 0.94,
-                bbox: [0.1, 0.2, 0.4, 0.8],
-            },
-            DetectedObject {
-                label: "laptop".into(),
-                confidence: 0.89,
-                bbox: [0.45, 0.5, 0.7, 0.85],
-            },
-        ],
-    })
+    Err("La detection d'objets n'est pas implementee : ce morph ne lit aucune image.".into())
 }
