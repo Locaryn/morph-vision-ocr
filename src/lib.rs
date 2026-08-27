@@ -1,6 +1,6 @@
 //! Locaryn Vision & OCR Plugin
-use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OcrRequest {
@@ -36,7 +36,9 @@ pub fn models_dir() -> PathBuf {
     if let Ok(dir) = std::env::var("LOCARYN_EXTENSION_MODELS_DIR") {
         PathBuf::from(dir)
     } else {
-        std::env::current_dir().unwrap_or_else(|_| PathBuf::from(".")).join("models")
+        std::env::current_dir()
+            .unwrap_or_else(|_| PathBuf::from("."))
+            .join("models")
     }
 }
 
@@ -44,11 +46,15 @@ pub fn list_vision_models() -> Vec<String> {
     let dir = models_dir();
     let mut models = Vec::new();
     if dir.exists() {
-        for entry in walkdir::WalkDir::new(&dir).into_iter().filter_map(|e| e.ok()) {
+        for entry in walkdir::WalkDir::new(&dir)
+            .into_iter()
+            .filter_map(|e| e.ok())
+        {
             let path = entry.path();
             if path.is_file() {
                 if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
-                    if ["onnx", "bin", "safetensors", "gguf"].contains(&ext.to_lowercase().as_str()) {
+                    if ["onnx", "bin", "safetensors", "gguf"].contains(&ext.to_lowercase().as_str())
+                    {
                         if let Some(name) = path.file_name().and_then(|n| n.to_str()) {
                             models.push(name.to_string());
                         }
@@ -68,12 +74,17 @@ pub fn list_vision_models() -> Vec<String> {
 
 pub async fn ocr_extract_text(req: OcrRequest) -> Result<OcrResult, String> {
     Ok(OcrResult {
-        extracted_text: format!("Texte extrait de {}: [Analyse OCR effectuée]", req.image_path),
+        extracted_text: format!(
+            "Texte extrait de {}: [Analyse OCR effectuée]",
+            req.image_path
+        ),
         confidence: 0.96,
     })
 }
 
-pub async fn detect_objects(req: DetectObjectsRequest) -> Result<DetectObjectsResult, String> {
+/// ATTENTION : implémentation factice. La requête est ignorée et le résultat
+/// est une valeur fixe. Aucune détection n'a lieu.
+pub async fn detect_objects(_req: DetectObjectsRequest) -> Result<DetectObjectsResult, String> {
     Ok(DetectObjectsResult {
         objects: vec![
             DetectedObject {
@@ -85,7 +96,7 @@ pub async fn detect_objects(req: DetectObjectsRequest) -> Result<DetectObjectsRe
                 label: "laptop".into(),
                 confidence: 0.89,
                 bbox: [0.45, 0.5, 0.7, 0.85],
-            }
-        ]
+            },
+        ],
     })
 }
