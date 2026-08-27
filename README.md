@@ -1,3 +1,3 @@
-# plugin-vision-ocr
+# morph-vision-ocr
 
 Extension de vision et OCR pour Locaryn.

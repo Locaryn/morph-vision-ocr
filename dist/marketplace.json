@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "refreshUrl": "https://raw.githubusercontent.com/Locaryn/plugin-vision-ocr/main/dist/marketplace.json",
+  "refreshUrl": "https://raw.githubusercontent.com/Locaryn/morph-vision-ocr/main/dist/marketplace.json",
   "owns": [
     "florence-2",
     "got-ocr2",

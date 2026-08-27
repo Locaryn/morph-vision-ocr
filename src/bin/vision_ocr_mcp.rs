@@ -1,4 +1,4 @@
-//! Stdio MCP server shipped by plugin-vision-ocr.
+//! Stdio MCP server shipped by morph-vision-ocr.
 use locaryn_plugin_vision_ocr::{detect_objects, list_vision_models, ocr_extract_text, DetectObjectsRequest, OcrRequest};
 use serde_json::{json, Value};
 use std::io::Write;
@@ -29,7 +29,7 @@ async fn handle_request(request: Value) -> Value {
         "initialize" => success(id, json!({
             "protocolVersion": "2025-06-18",
             "capabilities": { "tools": {} },
-            "serverInfo": { "name": "plugin-vision-ocr", "version": VERSION }
+            "serverInfo": { "name": "morph-vision-ocr", "version": VERSION }
         })),
         "tools/list" => success(id, tools_list()),
         "tools/call" => {
