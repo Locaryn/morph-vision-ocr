@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "vision-ocr": {
-      "command": "${LOCARYN_PLUGIN_ROOT}/bin/locaryn-vision-ocr-mcp",
+      "command": "${LOCARYN_MORPH_ROOT}/bin/locaryn-vision-ocr-mcp",
       "args": [],
       "env": {
         "RUST_LOG": "warn"
