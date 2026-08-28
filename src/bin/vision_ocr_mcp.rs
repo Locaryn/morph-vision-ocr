@@ -1,6 +1,7 @@
 //! Stdio MCP server shipped by morph-vision-ocr.
 use locaryn_plugin_vision_ocr::{
-    detect_objects, list_vision_models, ocr_extract_text, DetectObjectsRequest, OcrRequest,
+    describe_image, list_vision_models, ocr_extract_text, ocr_languages, tesseract_present,
+    DescribeImageRequest, OcrRequest,
 };
 use serde_json::{json, Value};
 use std::io::Write;
@@ -67,29 +68,30 @@ fn tools_list() -> Value {
         "tools": [
             {
                 "name": "list_vision_models",
-                "description": "Liste les modèles de vision et OCR disponibles localement.",
+                "description": "Les modèles de vision installés sur cette machine, et si tesseract est présent pour l'OCR.",
                 "inputSchema": { "type": "object", "properties": {} }
             },
             {
                 "name": "ocr_extract_text",
-                "description": "Extrait tout le texte d'un document, scan ou image.",
+                "description": "Extrait le texte d'une image ou d'un scan, par tesseract, sur cette machine. Rend le texte, le nombre de mots et la confiance moyenne que tesseract leur accorde — une mesure, pas une estimation.",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "image_path": { "type": "string", "description": "Chemin ou URL de l'image" },
-                        "language": { "type": "string", "description": "Langue préférentielle" }
+                        "image_path": { "type": "string", "description": "Chemin de l'image sur cette machine" },
+                        "language": { "type": "string", "description": "Langues au format tesseract : fra, eng, ou fra+eng. Omis : le réglage du morph." }
                     },
                     "required": ["image_path"]
                 }
             },
             {
-                "name": "detect_objects",
-                "description": "Détecte les objets, personnes et éléments avec leurs boîtes englobantes.",
+                "name": "describe_image",
+                "description": "Décrit une image, ou répond à une question à son sujet, par un modèle de vision servi localement. Ne rend AUCUNE boîte englobante : un modèle conversationnel sait nommer ce qu'il voit, pas dire où au pixel près.",
                 "inputSchema": {
                     "type": "object",
                     "properties": {
-                        "image_path": { "type": "string", "description": "Chemin de l'image" },
-                        "confidence_threshold": { "type": "number", "description": "Seuil de confiance minimum (0.0 à 1.0)" }
+                        "image_path": { "type": "string", "description": "Chemin de l'image sur cette machine" },
+                        "question": { "type": "string", "description": "Ce qu'on veut savoir. Omis : une description libre." },
+                        "model": { "type": "string", "description": "Modèle de vision, s'il doit différer du réglage." }
                     },
                     "required": ["image_path"]
                 }
@@ -100,18 +102,30 @@ fn tools_list() -> Value {
 
 async fn call_tool(name: &str, args: Value) -> Result<Value, String> {
     match name {
-        "list_vision_models" => Ok(json!({ "models": list_vision_models() })),
+        "list_vision_models" => {
+            // L'OCR ne dépend pas d'un modèle mais d'un outil externe : le
+            // dire ici évite un aller-retour pour l'apprendre par un échec.
+            let langues = if tesseract_present() {
+                ocr_languages().await.unwrap_or_default()
+            } else {
+                Vec::new()
+            };
+            Ok(json!({
+                "vision_models": list_vision_models(),
+                "tesseract_available": tesseract_present(),
+                "ocr_languages": langues,
+            }))
+        }
         "ocr_extract_text" => {
             let req: OcrRequest = serde_json::from_value(args)
                 .map_err(|e| format!("Paramètres OCR invalides: {e}"))?;
             let res = ocr_extract_text(req).await?;
             Ok(json!(res))
         }
-        "detect_objects" => {
-            let req: DetectObjectsRequest = serde_json::from_value(args)
-                .map_err(|e| format!("Paramètres détection invalides: {e}"))?;
-            let res = detect_objects(req).await?;
-            Ok(json!(res))
+        "describe_image" => {
+            let req: DescribeImageRequest =
+                serde_json::from_value(args).map_err(|e| format!("Paramètres invalides : {e}"))?;
+            Ok(json!(describe_image(req).await?))
         }
         _ => Err(format!("Outil vision inconnu : {name}")),
     }
