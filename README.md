@@ -1,3 +1,3 @@
 # morph-vision-ocr
 
-Extension de vision et OCR pour Locaryn.
+Morph de vision et OCR pour Locaryn.
